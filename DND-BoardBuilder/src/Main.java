@@ -11,8 +11,6 @@ public class Main extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root);
-        // // Uncomment and update the path if you have a stylesheet
-        // scene.getStylesheets().add(getClass().getResource("/assets/style.css").toExternalForm());
 
         primaryStage.setTitle("DnD Board Builder");
         primaryStage.setScene(scene);

@@ -1,8 +1,10 @@
 package models;
 
-public class Board implements Cloneable {
-    private int width;
-    private int height;
+import java.io.*;
+
+public class Board implements Cloneable, Serializable {
+    private final int width;
+    private final int height;
     private Tile[][] tiles;
 
     public Board(int width, int height, Tile defaultTile) {
@@ -38,6 +40,7 @@ public class Board implements Cloneable {
     }
 
     @Override
+    @SuppressWarnings("CloneDeclaresCloneNotSupported")
     public Board clone() {
         try {
             Board cloned = (Board) super.clone();
@@ -50,6 +53,18 @@ public class Board implements Cloneable {
             return cloned;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError();
+        }
+    }
+
+    public void saveToFile(File file) throws IOException {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            oos.writeObject(this);
+        }
+    }
+
+    public static Board loadFromFile(File file) throws IOException, ClassNotFoundException {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            return (Board) ois.readObject();
         }
     }
 }

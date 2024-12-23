@@ -1,10 +1,11 @@
 package models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Tile implements Cloneable {
+public class Tile implements Cloneable, Serializable {
     public enum TileCategory {
         FLOORING, WALLS, TREES
     }
@@ -98,6 +99,7 @@ public class Tile implements Cloneable {
     }
 
     @Override
+    @SuppressWarnings("CloneDeclaresCloneNotSupported")
     public Tile clone() {
         try {
             return (Tile) super.clone();
@@ -120,6 +122,6 @@ public class Tile implements Cloneable {
     }
 
     public static Tile[] values() {
-        return ALL_TILES.toArray(new Tile[0]);
+        return ALL_TILES.toArray(Tile[]::new);
     }
 }

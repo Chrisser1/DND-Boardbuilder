@@ -1,5 +1,10 @@
 package controllers;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Stack;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -13,9 +18,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.util.Callback;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import models.Board;
 import models.Tile;
+import static models.Tile.values;
 import utils.TileManager;
 
 public class MainController {
@@ -33,8 +40,8 @@ public class MainController {
     private final int BOARD_HEIGHT = 64;
 
     private Board board;
-    private Stack<Board> undoStack = new Stack<>();
-    private Stack<Board> redoStack = new Stack<>();
+    private final Stack<Board> undoStack = new Stack<>();
+    private final Stack<Board> redoStack = new Stack<>();
 
     // Current selected tile type
     private Tile currentTile = Tile.GRASS;
@@ -70,28 +77,23 @@ public class MainController {
     }
 
     private void initializeTileListView() {
-        tileListView.setItems(FXCollections.observableArrayList(Tile.values()));
-        tileListView.setCellFactory(new Callback<>() {
-            @Override
-            public ListCell<Tile> call(ListView<Tile> param) {
-                return new ListCell<>() {
-                    private final ImageView imageView = new ImageView();
+        tileListView.setItems(FXCollections.observableArrayList(values()));
+        tileListView.setCellFactory((ListView<Tile> param) -> new ListCell<>() {
+            private final ImageView imageView = new ImageView();
 
-                    @Override
-                    protected void updateItem(Tile item, boolean empty) {
-                        super.updateItem(item, empty);
-                        if (empty || item == null) {
-                            setGraphic(null);
-                            setText(null);
-                        } else {
-                            imageView.setImage(TileManager.getTileImage(item));
-                            imageView.setFitWidth(50);
-                            imageView.setFitHeight(50);
-                            setGraphic(imageView);
-                            setText(item.getType());
-                        }
-                    }
-                };
+            @Override
+            protected void updateItem(Tile item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setGraphic(null);
+                    setText(null);
+                } else {
+                    imageView.setImage(TileManager.getTileImage(item));
+                    imageView.setFitWidth(50);
+                    imageView.setFitHeight(50);
+                    setGraphic(imageView);
+                    setText(item.getType());
+                }
             }
         });
 
@@ -186,6 +188,48 @@ public class MainController {
                     gc.restore();
                 }
             }
+        }
+    }
+
+    public Stack<Board> getRedoStack() {
+        return redoStack;
+    }
+
+    @FXML
+    private void handleSave() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Board Files", "*.board"));
+        File file = fileChooser.showSaveDialog(new Stage());
+        if (file != null) {
+            try {
+                board.saveToFile(file);
+                statusLabel.setText("Board saved to " + file.getName());
+            } catch (IOException e) {
+                statusLabel.setText("Failed to save board: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void handleLoad() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Board Files", "*.board"));
+        File file = fileChooser.showOpenDialog(new Stage());
+        if (file != null) {
+            try {
+                board = Board.loadFromFile(file);
+                drawBoard();
+                statusLabel.setText("Board loaded from " + file.getName());
+            } catch (IOException | ClassNotFoundException e) {
+                statusLabel.setText("Failed to load board: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void handleAbout() throws IOException, URISyntaxException {
+        if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+            Desktop.getDesktop().browse(new URI("https://github.com/Chrisser1/DND-Boardbuilder.git"));
         }
     }
 }
