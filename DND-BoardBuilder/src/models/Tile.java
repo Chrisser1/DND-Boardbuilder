@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Tile {
+public class Tile implements Cloneable {
     public enum TileCategory {
         FLOORING, WALLS, TREES
     }
@@ -85,6 +85,15 @@ public class Tile {
                 ", y=" + y +
                 ", category=" + category +
                 '}';
+    }
+
+    @Override
+    public Tile clone() {
+        try {
+            return (Tile) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 
     public static Tile getTileByName(String selectedItem) {
