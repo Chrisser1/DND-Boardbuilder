@@ -1,6 +1,7 @@
 package models;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Tile {
@@ -11,8 +12,22 @@ public class Tile {
     public static final Tile GRASS = new Tile("Grass", TileCategory.FLOORING);
     public static final Tile ORANGE_GRASS = new Tile("Orange Grass", TileCategory.FLOORING);
     public static final Tile WATER = new Tile("Water", TileCategory.FLOORING);
-    public static final Tile STONE_WALL = new Tile("Stone", TileCategory.WALLS);
+    public static final Tile STONE_WALL = new Tile("Stone", TileCategory.FLOORING);
+    public static final Tile BRICK_WALL = new Tile("Brick", TileCategory.WALLS);
     public static final Tile OAK_TREE = new Tile("Oak Tree", TileCategory.TREES);
+
+    private static final List<Tile> ALL_TILES;
+
+    static {
+        List<Tile> tiles = new ArrayList<>();
+        tiles.add(GRASS);
+        tiles.add(ORANGE_GRASS);
+        tiles.add(WATER);
+        tiles.add(STONE_WALL);
+        tiles.add(BRICK_WALL);
+        tiles.add(OAK_TREE);
+        ALL_TILES = Collections.unmodifiableList(tiles);
+    }
 
     private String type;
     private int x;
@@ -73,7 +88,7 @@ public class Tile {
     }
 
     public static Tile getTileByName(String selectedItem) {
-        for (Tile tile : getAllTiles()) {
+        for (Tile tile : ALL_TILES) {
             if (tile.getType().equalsIgnoreCase(selectedItem)) {
                 return tile;
             }
@@ -81,11 +96,7 @@ public class Tile {
         return null; // or throw an exception if preferred
     }
 
-    private static List<Tile> getAllTiles() {
-        List<Tile> tiles = new ArrayList<>();
-        tiles.add(Tile.GRASS);
-        tiles.add(Tile.OAK_TREE);
-
-        return tiles;
+    public static List<Tile> getAllTiles() {
+        return ALL_TILES;
     }
 }

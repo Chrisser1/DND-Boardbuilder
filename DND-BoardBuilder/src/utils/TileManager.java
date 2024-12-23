@@ -20,7 +20,8 @@ public class TileManager {
         tileImages.put("Grass", new Image(basePath + "flooring/grass.png"));
         tileImages.put("Orange Grass", new Image(basePath + "flooring/orange_grass.png"));
         tileImages.put("Water", new Image(basePath + "flooring/water.png"));
-        tileImages.put("Stone", new Image(basePath + "walls/stone_wall.png"));
+        tileImages.put("Stone", new Image(basePath + "flooring/stone.png"));
+        tileImages.put("Brick", new Image(basePath + "walls/brick.png"));
         tileImages.put("Oak Tree", new Image(basePath + "trees/fornow.png"));
     }
 
@@ -42,21 +43,11 @@ public class TileManager {
 
     private static List<String> getTileNamesByCategory(Tile.TileCategory category) {
         List<String> tileNames = new ArrayList<>();
-        for (Tile tile : getAllTiles()) {
+        for (Tile tile : Tile.getAllTiles()) {
             if (tile.getCategory() == category) {
                 tileNames.add(tile.getType());
             }
         }
         return tileNames;
-    }
-
-    private static List<Tile> getAllTiles() {
-        List<Tile> tiles = new ArrayList<>();
-        tiles.add(Tile.GRASS);
-        tiles.add(Tile.ORANGE_GRASS);
-        tiles.add(Tile.WATER);
-        tiles.add(Tile.STONE_WALL);
-        tiles.add(Tile.OAK_TREE);
-        return tiles;
     }
 }

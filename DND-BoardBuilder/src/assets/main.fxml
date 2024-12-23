@@ -38,14 +38,14 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MainController">
   <children>
-    <MenuBar VBox.vgrow="NEVER">
+    <MenuBar useSystemMenuBar="true" VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
@@ -88,13 +88,13 @@
       <children>
             <ToolBar prefHeight="37.0" prefWidth="640.0">
                <items>
-                  <TextArea fx:id="statusLabel" prefHeight="37.0" prefWidth="164.0" />
+                  <Text fx:id="statusLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Selected Flooring:" wrappingWidth="163.13671875" />
                   <ChoiceBox fx:id="flooringChoiceBox" accessibleText="Select Flooring" prefWidth="150.0" />
                   <ChoiceBox fx:id="wallsChoiceBox" accessibleText="Select Walls" prefWidth="150.0" />
                   <ChoiceBox fx:id="treesChoiceBox" accessibleText="Select Trees" prefWidth="150.0" />
                </items>
             </ToolBar>
-            <Canvas fx:id="boardCanvas" height="334.0" layoutY="37.0" width="640.0" />
+            <Canvas fx:id="boardCanvas" layoutY="37.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="37.0" />
       </children>
     </AnchorPane>
   </children>

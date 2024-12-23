@@ -5,8 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import models.Board;
 import models.Tile;
 import utils.TileManager;
@@ -23,14 +24,13 @@ public class MainController {
     private ChoiceBox<String> treesChoiceBox;
 
     @FXML
-    private TextArea statusLabel;
+    private Text statusLabel;
 
     @FXML
     private Canvas boardCanvas;
 
-    private final int TILE_SIZE = 64;
-    private final int BOARD_WIDTH = 10;
-    private final int BOARD_HEIGHT = 8;
+    private final int BOARD_WIDTH = 64;
+    private final int BOARD_HEIGHT = 48;
 
     private Board board;
 
@@ -45,6 +45,18 @@ public class MainController {
         // Initialize ChoiceBoxes with tile options
         initializeChoiceBoxes();
         drawBoard();
+
+        // Add mouse event handlers to the canvas
+        boardCanvas.setOnMouseClicked(event -> handleMouseEvent(event.getX(), event.getY()));
+        boardCanvas.setOnMouseDragged(event -> handleMouseEvent(event.getX(), event.getY()));
+
+        // Bind canvas size to AnchorPane size
+        boardCanvas.widthProperty().bind(((AnchorPane) boardCanvas.getParent()).widthProperty());
+        boardCanvas.heightProperty().bind(((AnchorPane) boardCanvas.getParent()).heightProperty().subtract(37)); // Subtract toolbar height
+
+        // Redraw the board when the canvas size changes
+        boardCanvas.widthProperty().addListener(evt -> drawBoard());
+        boardCanvas.heightProperty().addListener(evt -> drawBoard());
     }
 
     private void initializeChoiceBoxes() {
@@ -80,17 +92,35 @@ public class MainController {
         });
     }
 
+    private void handleMouseEvent(double x, double y) {
+        double tileWidth = boardCanvas.getWidth() / BOARD_WIDTH;
+        double tileHeight = boardCanvas.getHeight() / BOARD_HEIGHT;
+
+        int tileX = (int) (x / tileWidth);
+        int tileY = (int) (y / tileHeight);
+
+        if (tileX >= 0 && tileX < BOARD_WIDTH && tileY >= 0 && tileY < BOARD_HEIGHT) {
+            board.setTile(tileX, tileY, currentTile);
+            drawBoard();
+        }
+    }
+
     private void drawBoard() {
         GraphicsContext gc = boardCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, boardCanvas.getWidth(), boardCanvas.getHeight());
 
+        double canvasWidth = boardCanvas.getWidth();
+        double canvasHeight = boardCanvas.getHeight();
+        double tileWidth = canvasWidth / BOARD_WIDTH;
+        double tileHeight = canvasHeight / BOARD_HEIGHT;
+
         // Draw tiles
-        for (int y = 0; y < board.getHeight(); y++) {
-            for (int x = 0; x < board.getWidth(); x++) {
+        for (int y = 0; y < BOARD_HEIGHT; y++) {
+            for (int x = 0; x < BOARD_WIDTH; x++) {
                 Tile tile = board.getTile(x, y);
                 Image tileImage = TileManager.getTileImage(tile);
                 if (tileImage != null) {
-                    gc.drawImage(tileImage, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                    gc.drawImage(tileImage, x * tileWidth, y * tileHeight, tileWidth, tileHeight);
                 }
             }
         }
