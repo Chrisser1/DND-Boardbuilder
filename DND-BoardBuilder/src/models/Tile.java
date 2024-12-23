@@ -13,7 +13,7 @@ public class Tile implements Cloneable {
     public static final Tile ORANGE_GRASS = new Tile("Orange Grass", TileCategory.FLOORING);
     public static final Tile WATER = new Tile("Water", TileCategory.FLOORING);
     public static final Tile STONE_WALL = new Tile("Stone", TileCategory.FLOORING);
-    public static final Tile BRICK_WALL = new Tile("Brick", TileCategory.WALLS);
+    public static final Tile BRICK_WALL = new Tile("Brick wall", TileCategory.WALLS);
     public static final Tile OAK_TREE = new Tile("Oak Tree", TileCategory.TREES);
 
     private static final List<Tile> ALL_TILES;
@@ -32,6 +32,7 @@ public class Tile implements Cloneable {
     private String type;
     private int x;
     private int y;
+    private double rotation;
     private TileCategory category;
 
     private Tile(String type, TileCategory category) {
@@ -69,6 +70,14 @@ public class Tile implements Cloneable {
         this.y = y;
     }
 
+    public double getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(double rotation) {
+        this.rotation = rotation;
+    }
+
     public TileCategory getCategory() {
         return category;
     }
@@ -83,6 +92,7 @@ public class Tile implements Cloneable {
                 "type='" + type + '\'' +
                 ", x=" + x +
                 ", y=" + y +
+                ", rotation=" + rotation +
                 ", category=" + category +
                 '}';
     }
@@ -107,5 +117,9 @@ public class Tile implements Cloneable {
 
     public static List<Tile> getAllTiles() {
         return ALL_TILES;
+    }
+
+    public static Tile[] values() {
+        return ALL_TILES.toArray(new Tile[0]);
     }
 }
